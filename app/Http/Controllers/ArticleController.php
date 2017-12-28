@@ -119,12 +119,13 @@ class ArticleController extends Controller
      */
     public function test(Request $request)
     {
-        //$tags = \App\Tag::latest()->withCount('articles')->get();
+        $tags = \App\Tag::latest()->withCount('articles')->get();
         $articles = \App\Article::whereHas('tags', function ($query) {
             $query->where('name', '=', 'hello');
         })->get();
         
-        return response($articles, 200);
+        
+        return response($tags, 200);
     }
     
     /**

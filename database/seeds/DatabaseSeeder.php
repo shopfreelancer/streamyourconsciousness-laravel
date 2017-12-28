@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Article;
+use App\Tag;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +13,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        DB::table('articles')->delete();
+        $json = File::get('database/seeds/data/articles.json');
+        $articles = json_decode($json);
+        foreach($articles as $articleOrg){
+            $article = Article::create(array(
+                'body' => $articleOrg->text,
+                'published' => $articleOrg->created,
+            ));
+      
+            //$this->command->getOutput()->writeln($test);
+            foreach($articleOrg->tags as $tag){
+               
+                $tag = Tag::firstOrCreate(array(
+                    'name' => $tag
+                ));
+                $article->tags()->syncWithoutDetaching([$tag->id]);
+            }
+            
+        }
     }
 }
