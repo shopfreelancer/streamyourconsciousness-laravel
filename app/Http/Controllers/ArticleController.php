@@ -36,9 +36,9 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'body' => 'required|min:3'
+            'text' => 'required|min:3'
         ]);
-        return Article::create([ 'body' => request('body') ]);
+        return Article::create([ 'text' => request('text') ]);
     }
 
     /**
@@ -81,16 +81,15 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function newTag(Request $request)
+    public function attachNewTag(Request $request)
     {
         $tag = \App\Tag::firstOrCreate(array('name' => $request->tagName));
-        $article = Article::findOrFail($request->articleId);
+        $article = Article::with('Tags')->findOrFail($request->articleId);
         
         // attach tag to pivot table only once
         $article->tags()->syncWithoutDetaching([$tag->id]);
     
-        return response()->json(['tagId' => $tag->id]);
-        
+        return response()->json($article->tags);
     }
     
      /**

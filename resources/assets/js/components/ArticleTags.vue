@@ -37,12 +37,17 @@ export default {
       addTag(event){
           var self = this;
           let article = self.article;
-          let tag = this.newTag;
-          if(this.article.tags.includes(this.newTag)){
+          let tagName = this.newTag;
+  
+          let tagNames = this.article.tags.map(function(tag){
+            return tag.name;
+          });
+
+          if(tagNames.includes(this.newTag)){
               this.tagInputFieldHasErrors = true;
               this.tagInputFieldErrorMessage = "Your tag exists already.";
           } else {
-            this.$store.commit('addTag', { article, tag });
+            this.$store.dispatch('addTagToArticle', { article, tagName });
             this.resetTagInputField();
           }
       },

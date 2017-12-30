@@ -50,18 +50,23 @@ export default new Vuex.Store({
         });
     },
     removeTagFromArticle(context, { articleId, tagId }) {
-       axios.post('api/articles/delete-tag/', { articleId, tagId })
-                    .then((res) => {
-  
-                        let tags = res.data;
-                        let article = context.getters.getArticleById(articleId);
-                  
-                        context.commit('setTags', { article, tags } );
-                    })
-                    .catch((err) => console.error(err));
+        axios.post('api/articles/delete-tag/', { articleId, tagId })
+            .then((res) => {
+                let tags = res.data;
+                let article = context.getters.getArticleById(articleId);
+
+                context.commit('setTags', { article, tags } );
+            })
+            .catch((err) => console.error(err));
     },
-    addTagToArticle(context, { articleId, tagName }) {
-        
+    addTagToArticle(context, { article, tagName }) {
+        let articleId = article.id;
+        axios.post('api/articles/new-tag/', { articleId, tagName })
+            .then((res) => {
+                let tags = res.data;
+                context.commit('setTags', { article, tags } );
+            })
+            .catch((err) => console.error(err));
     }
   },
   getters : {
