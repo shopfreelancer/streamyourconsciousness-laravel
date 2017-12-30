@@ -1,45 +1,76 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { state, mutations } from './mutations'
 import plugins from './plugins'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state,
-  mutations,
-  plugins,
+  state : {
+    articles : []
+  },
+  mutations : {
+      
+    setArticles(state,articles){
+        state.articles = articles
+    },
+    
+    addArticle (state, article) {
+      state.articles.push(article)
+    },
+
+    resetStore(state) {
+        state.articles = [];
+    },
+
+    deleteArticle (state, article) {
+       state.articles.splice(state.articles.indexOf(article), 1)
+    },
+
+   addTag (state, { article, tag }) {
+      article.tags.push(tag);
+    },
+    
+   setTags (state, { article, tags }) {
+      article.tags = tags;
+    },    
+
+   deleteTag (state, { article, tag }) {
+      let tagIndex = article.tags.indexOf(tag);
+      article.tags.splice(tagIndex,1);
+    }
+
+  },
   actions: {
-    addArticleAction (context,article) {
-      if(typeof article.id === "undefinded" || article.id === null){
-          article.id = context.getters.getNewArticleId
-      }    
-      context.commit('addArticle', article);
-    } 
+    fetchArticles(context) {
+        axios.get('api/articles').then((res) => {
+            if(res.data.length > 0){
+                let articles = res.data;
+                context.commit('setArticles', articles) 
+            }   
+        });
+    },
+    removeTagFromArticle(context, { articleId, tagId }) {
+       axios.post('api/articles/delete-tag/', { articleId, tagId })
+                    .then((res) => {
+  
+                        let tags = res.data;
+                        let article = context.getters.getArticleById(articleId);
+                  
+                        context.commit('setTags', { article, tags } );
+                    })
+                    .catch((err) => console.error(err));
+    },
+    addTagToArticle(context, { articleId, tagName }) {
+        
+    }
   },
   getters : {
-    /**
-    * Generates primary key index for articleIds. Get highest id
-    */
-    getNewArticleId: (state, getters) => {
-        if(getters.getArticlesCount === 0) 
-            return 1;
-        if(getters.getArticlesCount > 0){
-            let articleIds = [];
-            state.articles.forEach(function(article){
-                articleIds.push(article.id);
-            })
-
-            let highestId = Math.max.apply(Math, articleIds);
-            return highestId +1;
-        }
-        return false;
-    },
     getArticlesCount : state => {
         return state.articles.length;
     },
     getArticleById: (state) => (id) => {
         return state.articles.find(article => article.id === id)
     }    
-  }
+  },
+  plugins
 })

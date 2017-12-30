@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Route::get('api/articles/test', 'ArticleController@test');
 Route::post('api/articles/new-tag', 'ArticleController@newTag');
-Route::post('api/articles/delete-tag', 'ArticleController@deleteTag');
+Route::post('api/articles/delete-tag', 'ArticleController@detachTagByTagId');
 Route::prefix('api')->group(function() {
     Route::resource('articles', 'ArticleController');
 

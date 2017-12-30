@@ -99,16 +99,15 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteTag(Request $request)
+    public function detachTagByTagId(Request $request)
     {   
-        $tag = \App\Tag::firstOrCreate(array('name' => $request->tagName));
-        $article = Article::findOrFail($request->articleId);
-        
-        $result = $article->tags()->detach([$tag->id]);
+ 
+        $article = Article::with('Tags')->find($request->articleId);
+        $article->tags()->detach([$request->tagId]);
         
         $this->cleanUpTags();
         
-        return response('true', 200);
+        return response()->json($article->tags);
     }
     
      /**
@@ -123,7 +122,6 @@ class ArticleController extends Controller
         $articles = \App\Article::whereHas('tags', function ($query) {
             $query->where('name', '=', 'hello');
         })->get();
-        
         
         return response($tags, 200);
     }

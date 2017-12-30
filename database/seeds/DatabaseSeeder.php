@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $articles = json_decode($json);
         foreach($articles as $articleOrg){
             $article = Article::create(array(
-                'body' => $articleOrg->text,
+                'text' => $articleOrg->text,
                 'published' => $articleOrg->created,
             ));
       

@@ -31,14 +31,14 @@
 </template>
 
 <script>
-import { EventBus } from '../event-bus.js';
+import { EventBus } from './event-bus.js';
 
 //Vue.component('ArticleList', require('./components/ArticleList.vue'));
 
-import ArticleList from './ArticleList.vue'
-import ArticleCreate from './ArticleCreate.vue'
+import ArticleList from './components/ArticleList.vue'
+import ArticleCreate from './components/ArticleCreate.vue'
 
-import store from '../store/index.js'
+import store from './store/index.js'
 
 
 export default {

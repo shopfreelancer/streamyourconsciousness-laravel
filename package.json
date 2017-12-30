@@ -19,6 +19,7 @@
         "vue": "^2.5.7",
         "moment": "^2.19.3",
         "vue2-editor": "^2.3.11",
-        "vuejs-datepicker": "^0.9.21"
+        "vuejs-datepicker": "^0.9.21",
+        "vuex": "^3.0.1"
     }
 }

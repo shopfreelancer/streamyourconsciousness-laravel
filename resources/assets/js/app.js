@@ -15,15 +15,10 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue'));
-//Vue.component('article-list', require('./components/ArticleList.vue'));
-//Vue.component('Layout', require('./components/Layout.vue'));
-import Layout from './components/Layout.vue'
+Vue.component('Layout', require('./components/Layout.vue'));
+import store from './store/index.js'
+
 const app = new Vue({
+    store,
     el: '#app',
-    template: '<Layout/>',
-    components: { Layout }    
 });
-
-
-

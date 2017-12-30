@@ -17,13 +17,13 @@ export default {
         * Creates a new article model as soon as the users submits the input
         */
         createArticle(){
-            let newArticleObj = {
+            let article = {
                 'text' : this.newArticle,
                 'created' : moment().format('Y-MM-DD'),
                 'tags' : [] 
             }
             
-            //this.$articlesStore.addNewArticle(newArticleObj);
+            this.$store.commit('addArticle', article);
             // clear input field
             this.newArticle = "";
         },
