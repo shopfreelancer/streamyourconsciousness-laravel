@@ -117,18 +117,25 @@ class ArticleController extends Controller
      */
     public function test(Request $request)
     {
+        $tag = \App\Tag::latest()->with('articles')->find(18);
+        return $tag->articles;
         $tags = \App\Tag::latest()->withCount('articles')->get();
+        /*
         $articles = \App\Article::whereHas('tags', function ($query) {
             $query->where('name', '=', 'hello');
         })->get();
+        */
+        $articles = \App\Article::with('tags')->get();
+        return \App\Tag::latest()->withCount('articles')->get();
         
-        return response($tags, 200);
+        return response($articles, 200);
     }
     
     /**
      * Delete Tags that are not attached to an Article
      */
-    public function cleanUpTags(){
+    public function cleanUpTags()
+    {
         $tags = \App\Tag::latest()->withCount('articles')->get();
         
         foreach($tags as $tag){
@@ -136,6 +143,17 @@ class ArticleController extends Controller
                 $tag->delete();
             }
         }
+    }
+    
+    public function getTags()
+    {
+        return \App\Tag::latest()->withCount('articles')->get();
+    }
+    
+    public function filterArticlesByTagId(Request $request)
+    {
+        $tag = \App\Tag::latest()->with('articles')->find($request->tagId);
+        return $tag->articles;
     }
 
     /**

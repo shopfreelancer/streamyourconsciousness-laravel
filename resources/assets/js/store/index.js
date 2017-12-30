@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state : {
-    articles : []
+    articles : [],
+    tags : []
   },
   mutations : {
       
@@ -26,21 +27,33 @@ export default new Vuex.Store({
        state.articles.splice(state.articles.indexOf(article), 1)
     },
 
-   addTag (state, { article, tag }) {
+   addTagToArticle (state, { article, tag }) {
       article.tags.push(tag);
     },
     
-   setTags (state, { article, tags }) {
+   setTagsForArticle (state, { article, tags }) {
       article.tags = tags;
     },    
 
    deleteTag (state, { article, tag }) {
       let tagIndex = article.tags.indexOf(tag);
       article.tags.splice(tagIndex,1);
-    }
+    },
+    
+    setTags (state,  tags ) {
+        state.tags = tags;
+    },    
 
   },
   actions: {
+    fetchTags(context) {
+        axios.get('api/articles/get-tags').then((res) => {
+            if(res.data.length > 0){
+                let tags = res.data;
+                context.commit('setTags', tags) 
+            }   
+        });
+    },      
     fetchArticles(context) {
         axios.get('api/articles').then((res) => {
             if(res.data.length > 0){
@@ -55,7 +68,7 @@ export default new Vuex.Store({
                 let tags = res.data;
                 let article = context.getters.getArticleById(articleId);
 
-                context.commit('setTags', { article, tags } );
+                context.commit('setTagsForArticle', { article, tags } );
             })
             .catch((err) => console.error(err));
     },
@@ -64,7 +77,15 @@ export default new Vuex.Store({
         axios.post('api/articles/new-tag/', { articleId, tagName })
             .then((res) => {
                 let tags = res.data;
-                context.commit('setTags', { article, tags } );
+                context.commit('setTagsForArticle', { article, tags } );
+            })
+            .catch((err) => console.error(err));
+    },
+    filterArticlesByTagId(context, { tagId }) {
+        axios.post('api/articles/filter-articles-by-tag/', { tagId })
+            .then((res) => {
+                let articles = res.data;
+                context.commit('setArticles', articles  );
             })
             .catch((err) => console.error(err));
     }

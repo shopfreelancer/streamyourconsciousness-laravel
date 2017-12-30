@@ -21,14 +21,14 @@ class ArticlesTableSeeder extends Seeder
                 'text' => $articleData->text,
                 'published' => $articleData->created,
             ));
-      
-            //$this->command->getOutput()->writeln($test);
+
             foreach($articleData->tags as $tag){
                
                 $tag = Tag::firstOrCreate(array(
                     'name' => $tag
             ));
-                $article->tags()->syncWithoutDetaching([$tag->id]);
+            
+            $article->tags()->syncWithoutDetaching([$tag->id]);
             }
         }
     
