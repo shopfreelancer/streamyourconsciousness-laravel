@@ -1,12 +1,12 @@
 <template>
 <div class="article-list-item-wrap">
     <div v-show="article.dateHeadline" class="col-lg-8">
-        <h2>{{ article.created | formatDateHumanReadable }}</h2>
+        <h2>{{ article.published | formatDateHumanReadable }}</h2>
     </div>
     <div class="card article-list-item">
         <div class="card-body">
             <div class="article-text-wrap">
-                <blockquote @click="editArticleForm" v-show="!showEditArticleTextarea" class="card-blockquote">
+                <blockquote @click="showEditArticleTextarea = !showEditArticleTextarea" v-show="!showEditArticleTextarea" class="card-blockquote">
                     <div v-show="!showEditArticleTextarea" v-html="article.text"></div>
                 </blockquote>
 
@@ -17,7 +17,7 @@
                             >
                 </vue-editor>
 
-                <button @click="editArticleForm" v-show="showEditArticleTextarea" type="button" class="btn-save-article-text btn btn-primary">Save Article</button> 
+                <button @click="updateArticle" v-show="showEditArticleTextarea" type="button" class="btn-save-article-text btn btn-sm btn-primary">Save Article</button> 
             </div>
             <span class="fa pull-right touchable-elem" v-on:click="showCardFooter = !showCardFooter" v-bind:class="[showCardFooter ? 'fa-arrow-circle-up' : 'fa-arrow-circle-down']"></span>
         </div>
@@ -33,12 +33,13 @@
                         <span class="btn btn-outline-secondary  btn-sm" @click="showDatepicker = !showDatepicker">Edit date</span>
                     </div>
                     <div class="col-md-6">
-                        <span v-show="!showDatepicker" class="article-item-date">{{article.created | formatDateHumanReadable}}</span>
-                        <date-picker v-on:selected="showDatepicker = false"
+                        <span v-show="!showDatepicker" class="article-item-date">{{article.published | formatDateHumanReadable}}</span>
+                        <date-picker 
+                             v-on:selected="updateDate()"
                              v-show="showDatepicker"
                              wrapper-class="sf-articlelist-datepicker"
                              input-class="form-control form-control-sm"
-                             v-model="article.created">
+                             v-model="article.published">
                         </date-picker> 
                     </div>
                 </div>
@@ -51,7 +52,6 @@
                     </div>    
                 </div>
             </div>
-
         </transition>
     </div>
 </div>
@@ -76,8 +76,16 @@ export default {
         this.showEditArticleTextarea = !this.showEditArticleTextarea
       },
       deleteArticle(){
-          this.$store.commit('deleteArticle',this.article);
-      },  
+          this.$store.dispatch('deleteArticle', { article:this.article });
+      },
+      updateArticle(){
+          this.$store.dispatch('updateArticle', { article:this.article });
+          this.showEditArticleTextarea = false;
+      },
+      updateDate(){
+          this.$store.dispatch('updateArticle', { article:this.article });
+          this.showDatepicker = false;
+      }
   },
   created() {
       var self = this;

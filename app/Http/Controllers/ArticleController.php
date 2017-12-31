@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Tag;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -35,10 +36,10 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'text' => 'required|min:3'
-        ]);
-        return Article::create([ 'text' => request('text') ]);
+        return Article::create([ 
+            'text' => $request->article['text'],
+            'published' => $request->article['published']  
+         ]);
     }
 
     /**
@@ -70,9 +71,18 @@ class ArticleController extends Controller
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Article $article)
+    public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'article.text' => 'required|min:3'
+        ]);
         
+        $article = Article::findOrFail($id);
+        
+        $input['text'] = $request->article['text'];
+        $input['published'] = $request->article['published'];
+
+        $article->fill($input)->save();
     }
   
     /**
@@ -83,7 +93,7 @@ class ArticleController extends Controller
      */
     public function attachNewTag(Request $request)
     {
-        $tag = \App\Tag::firstOrCreate(array('name' => $request->tagName));
+        $tag = Tag::firstOrCreate(array('name' => $request->tagName));
         $article = Article::with('Tags')->findOrFail($request->articleId);
         
         // attach tag to pivot table only once
@@ -100,7 +110,6 @@ class ArticleController extends Controller
      */
     public function detachTagByTagId(Request $request)
     {   
- 
         $article = Article::with('Tags')->find($request->articleId);
         $article->tags()->detach([$request->tagId]);
         
@@ -117,7 +126,7 @@ class ArticleController extends Controller
      */
     public function test(Request $request)
     {
-        $articles = \App\Article::with('tags')->get();
+        $articles = Article::with('tags')->get();
         
         return response($articles, 200);
     }
@@ -127,7 +136,7 @@ class ArticleController extends Controller
      */
     public function cleanUpTags()
     {
-        $tags = \App\Tag::latest()->withCount('articles')->get();
+        $tags = Tag::latest()->withCount('articles')->get();
         
         foreach($tags as $tag){
             if($tag->articles_count === 0){
@@ -142,7 +151,7 @@ class ArticleController extends Controller
      */
     public function getTags()
     {
-        return \App\Tag::latest()->withCount('articles')->get();
+        return Tag::latest()->withCount('articles')->get();
     }
     
     /**
@@ -152,7 +161,7 @@ class ArticleController extends Controller
      */
     protected function getArticlesFilteredByTagIds(Array $tagIds)
     {
-        $articles = \App\Article::whereHas('tags', function($query) use($tagIds){
+        $articles = Article::whereHas('tags', function($query) use($tagIds){
             $query->whereIn('id', $tagIds);
         })->with('tags')->get();
         
@@ -180,7 +189,7 @@ class ArticleController extends Controller
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy($id)
     {
         $article = Article::findOrFail($id);
         $article->delete();

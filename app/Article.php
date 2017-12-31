@@ -12,4 +12,9 @@ class Article extends Model
         return $this->belongsToMany('App\Tag');
     }
     
+    public function setPublishedAttribute($value)
+    {
+        $this->attributes['published'] = date("Y-m-d", strtotime($value));
+    }
+    
 }

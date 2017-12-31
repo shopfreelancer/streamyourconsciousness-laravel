@@ -16,7 +16,7 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->longtext('text');
-            $table->dateTime('published')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
+            $table->date('published')->default(date("Y-m-d"));
             $table->timestamps();
         });
     }

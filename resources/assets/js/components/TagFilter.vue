@@ -1,6 +1,6 @@
 <template>
     <div class="container" id="tag-filter">
-        <h3>Filter Results</h3>
+        <h3>Filter Tags</h3>
         <span v-for="tag in tags">
             <tag-filter-item :tag="tag"/>
         </span>

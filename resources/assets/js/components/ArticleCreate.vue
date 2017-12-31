@@ -19,11 +19,9 @@ export default {
         createArticle(){
             let article = {
                 'text' : this.newArticle,
-                'created' : moment().format('Y-MM-DD'),
-                'tags' : [] 
+                'published' : moment().format('Y-M-D')
             }
-            
-            this.$store.commit('addArticle', article);
+            this.$store.dispatch('addArticle', { article });
             // clear input field
             this.newArticle = "";
         },
