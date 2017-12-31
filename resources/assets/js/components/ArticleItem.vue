@@ -3,7 +3,7 @@
     <div v-show="article.dateHeadline" class="col-lg-8">
         <h2>{{ article.published | formatDateHumanReadable }}</h2>
     </div>
-    <div class="card article-list-item">
+    <div class="card article-list-item" v-show="showArticle">
         <div class="card-body">
             <div class="article-text-wrap">
                 <blockquote @click="showEditArticleTextarea = !showEditArticleTextarea" v-show="!showEditArticleTextarea" class="card-blockquote">
@@ -29,10 +29,10 @@
                 <article-tags :tags="article.tags" :article="article" :articleId="articleId"/>
                 
                 <div class="article-date row">
-                    <div class="col-md-6">    
+                    <div class="col-6">    
                         <span class="btn btn-outline-secondary  btn-sm" @click="showDatepicker = !showDatepicker">Edit date</span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-6">
                         <span v-show="!showDatepicker" class="article-item-date">{{article.published | formatDateHumanReadable}}</span>
                         <date-picker 
                              v-on:selected="updateDate()"
@@ -76,6 +76,7 @@ export default {
         this.showEditArticleTextarea = !this.showEditArticleTextarea
       },
       deleteArticle(){
+          this.showArticle = false;
           this.$store.dispatch('deleteArticle', { article:this.article });
       },
       updateArticle(){
@@ -104,6 +105,7 @@ export default {
   },
   data () {
     return {
+      showArticle : true,
       showCardFooter : false,
       showDatepicker : false,
       showEditArticleTextarea : false,
@@ -143,7 +145,11 @@ export default {
     .card-blockquote {
         white-space: pre-line;
     }
-    
+
+    .card-blockquote p{
+        margin-bottom:0;
+    }
+
     .btn-save-article-text {margin-top:10px;}
     
     .article-text-wrap .quillWrapper .ql-snow.ql-toolbar {
