@@ -1,12 +1,14 @@
 <template>
     <div class="container" id="tag-filter">
-        <span @click="filterArticlesByTagId(tag.id)" class="tag-filter-item badge badge-pill badge-secondary" v-for="tag in tags">
-            {{ tag.name }} ({{ tag.articles_count }})
+        <h3>Filter Results</h3>
+        <span v-for="tag in tags">
+            <tag-filter-item :tag="tag"/>
         </span>
     </div>
 </template>
 
 <script>
+import TagFilterItem from './TagFilterItem.vue';
 export default {
     name: 'TagFilter',
     methods : {
@@ -18,10 +20,14 @@ export default {
         tags(){
             return this.$store.state.tags;
         }
+    },
+    components : { 
+        TagFilterItem 
     }
- 
 }
 </script>
-
 <style>
+    #tag-filter {
+        margin-bottom:20px;
+    }
 </style>

@@ -18,7 +18,7 @@ import moment from 'moment';
 export default {
     name: 'ArticleList',
     mounted(){
-        this.$store.dispatch('fetchArticles');
+        this.$store.dispatch('initArticles');
     },
     methods: {
         /**

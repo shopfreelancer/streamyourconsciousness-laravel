@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state : {
     articles : [],
-    tags : []
+    tags : [],
+    activeTagFilter : []
   },
   mutations : {
       
@@ -42,23 +43,28 @@ export default new Vuex.Store({
     
     setTags (state,  tags ) {
         state.tags = tags;
-    },    
+    },
+    
+    toggleTagIdInFilter (state,  {tagId} ) {
+        let tagIndex = state.activeTagFilter.indexOf(tagId);
+        if(tagIndex > -1){
+           state.activeTagFilter.splice(tagIndex,1); 
+        } else {
+           state.activeTagFilter.push(tagId);
+        }
+    },
 
   },
   actions: {
+    initArticles(context) {
+        let tagIds = [];
+        context.dispatch('filterArticlesByTagIds', { tagIds } );
+    },
     fetchTags(context) {
         axios.get('api/articles/get-tags').then((res) => {
             if(res.data.length > 0){
                 let tags = res.data;
                 context.commit('setTags', tags) 
-            }   
-        });
-    },      
-    fetchArticles(context) {
-        axios.get('api/articles').then((res) => {
-            if(res.data.length > 0){
-                let articles = res.data;
-                context.commit('setArticles', articles) 
             }   
         });
     },
@@ -81,13 +87,18 @@ export default new Vuex.Store({
             })
             .catch((err) => console.error(err));
     },
-    filterArticlesByTagId(context, { tagId }) {
-        axios.post('api/articles/filter-articles-by-tag/', { tagId })
+    filterArticlesByTagIds(context, { tagIds }) {
+        axios.post('api/articles/get-filtered-articles/', { tagIds })
             .then((res) => {
                 let articles = res.data;
                 context.commit('setArticles', articles  );
             })
             .catch((err) => console.error(err));
+    },
+    toggleTagIdInFilter(context, { tagId }) {
+        context.commit('toggleTagIdInFilter', {tagId} );
+        let tagIds = context.state.activeTagFilter;
+        context.dispatch('filterArticlesByTagIds', { tagIds } );
     }
   },
   getters : {

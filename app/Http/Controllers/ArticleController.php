@@ -117,16 +117,7 @@ class ArticleController extends Controller
      */
     public function test(Request $request)
     {
-        $tag = \App\Tag::latest()->with('articles')->find(18);
-        return $tag->articles;
-        $tags = \App\Tag::latest()->withCount('articles')->get();
-        /*
-        $articles = \App\Article::whereHas('tags', function ($query) {
-            $query->where('name', '=', 'hello');
-        })->get();
-        */
         $articles = \App\Article::with('tags')->get();
-        return \App\Tag::latest()->withCount('articles')->get();
         
         return response($articles, 200);
     }
@@ -145,15 +136,42 @@ class ArticleController extends Controller
         }
     }
     
+    /**
+     * Get List of all Tags
+     * @return type
+     */
     public function getTags()
     {
         return \App\Tag::latest()->withCount('articles')->get();
     }
     
-    public function filterArticlesByTagId(Request $request)
+    /**
+     * Filter Article collection with tags
+     * @param array $tagIds
+     * @return type
+     */
+    protected function getArticlesFilteredByTagIds(Array $tagIds)
     {
-        $tag = \App\Tag::latest()->with('articles')->find($request->tagId);
-        return $tag->articles;
+        $articles = \App\Article::whereHas('tags', function($query) use($tagIds){
+            $query->whereIn('id', $tagIds);
+        })->with('tags')->get();
+        
+        return $articles;
+    }
+    
+    /**
+     * Get filtered list of articles
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function filterArticles(Request $request)
+    {
+        if(isset($request->tagIds) && count($request->tagIds)>0){
+            return $this->getArticlesFilteredByTagIds($request->tagIds);
+        } else {
+            return Article::latest()->with('Tags')->get();
+        }
     }
 
     /**

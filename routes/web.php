@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::post('api/articles/new-tag', 'ArticleController@attachNewTag');
 Route::post('api/articles/delete-tag', 'ArticleController@detachTagByTagId');
 Route::get('api/articles/get-tags', 'ArticleController@getTags');
-Route::post('api/articles/filter-articles-by-tag', 'ArticleController@filterArticlesByTagId');
+Route::post('api/articles/get-filtered-articles', 'ArticleController@filterArticles');
 
 
 Route::get('api/articles/test', 'ArticleController@test');
