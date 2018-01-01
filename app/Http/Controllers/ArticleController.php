@@ -118,19 +118,6 @@ class ArticleController extends Controller
         return response()->json($article->tags);
     }
     
-     /**
-     * @todo: remove
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function test(Request $request)
-    {
-        $articles = Article::with('tags')->get();
-        
-        return response($articles, 200);
-    }
-    
     /**
      * Delete Tags that are not attached to an Article
      */
