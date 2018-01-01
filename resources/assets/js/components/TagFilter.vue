@@ -21,7 +21,7 @@ export default {
     },
     computed : {
         tags(){
-            return this.$store.state.tags;
+            return this.$store.state.tagsStore.tags;
         }
     },
     components : { 

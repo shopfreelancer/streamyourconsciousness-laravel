@@ -144,10 +144,10 @@ export default {
               return this.articles;
           },
           articles(){
-              return this.$store.state.articles;
+              return this.$store.state.articlesStore.articles;
           },
           paginatedArticlesPage(){
-              return this.$store.state.paginatedArticlesPage;
+              return this.$store.state.articlesStore.paginatedArticlesPage;
          }
       },
       data () {
