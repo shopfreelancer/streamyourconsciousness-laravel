@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -13,9 +14,11 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Article::latest()->with('Tags')->get();
+        return response($request);
+        return Article::latest()->with('Tags')->paginate(10);
+       
     }
 
     /**
@@ -150,7 +153,7 @@ class ArticleController extends Controller
     {
         $articles = Article::whereHas('tags', function($query) use($tagIds){
             $query->whereIn('id', $tagIds);
-        })->with('tags')->get();
+        })->with('tags');
         
         return $articles;
     }
@@ -164,10 +167,12 @@ class ArticleController extends Controller
     public function filterArticles(Request $request)
     {
         if(isset($request->tagIds) && count($request->tagIds)>0){
-            return $this->getArticlesFilteredByTagIds($request->tagIds);
+            $articles = $this->getArticlesFilteredByTagIds($request->tagIds);
         } else {
-            return Article::latest()->with('Tags')->get();
+            $articles = Article::latest()->with('Tags');
         }
+        
+        return $articles->paginate(5);
     }
 
     /**

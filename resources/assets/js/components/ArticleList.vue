@@ -7,12 +7,15 @@
               v-bind:key="index"
               >
         </article-item>
+<pagination :data="paginatedArticlesPage" v-on:pagination-change-page="getResults"></pagination>
+
    </div>
 </template> 
 
 <script>
 import  ArticleItem  from './ArticleItem.vue';
 import moment from 'moment';
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 export default {
     name: 'ArticleList',
@@ -20,6 +23,9 @@ export default {
         this.$store.dispatch('initArticles');
     },
     methods: {
+        getResults(page){
+            this.$store.dispatch('filterArticlesByTagIds', page);
+        },
         /**
         * Sort articles by date. This is used only for rendering.
         */
@@ -139,7 +145,10 @@ export default {
           },
           articles(){
               return this.$store.state.articles;
-          }
+          },
+          paginatedArticlesPage(){
+              return this.$store.state.paginatedArticlesPage;
+         }
       },
       data () {
         return {

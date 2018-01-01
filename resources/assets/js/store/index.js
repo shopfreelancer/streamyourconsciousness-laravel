@@ -8,11 +8,15 @@ export default new Vuex.Store({
   state : {
     articles : [],
     tags : [],
-    activeTagFilter : []
+    activeTagFilter : [],
+    paginatedArticlesPage : {}
   },
   mutations : {
     setArticles(state,articles){
         state.articles = articles
+    },
+    setPaginatedArticlesPage(state,paginatedArticlesPage){
+        state.paginatedArticlesPage = paginatedArticlesPage;
     },
     addArticle (state, {article}) {
       state.articles.push(article);
@@ -23,13 +27,13 @@ export default new Vuex.Store({
     deleteArticle (state, {article}) {
        state.articles.splice(state.articles.indexOf(article), 1)
     },
-   addTagToArticle (state, { article, tag }) {
+    addTagToArticle (state, { article, tag }) {
       article.tags.push(tag);
     },
-   setTagsForArticle (state, { article, tags }) {
+    setTagsForArticle (state, { article, tags }) {
       article.tags = tags;
     },    
-   deleteTag (state, { article, tag }) {
+    deleteTag (state, { article, tag }) {
       let tagIndex = article.tags.indexOf(tag);
       article.tags.splice(tagIndex,1);
     },
@@ -47,8 +51,7 @@ export default new Vuex.Store({
   },
   actions: { 
     initArticles(context) {
-        let tagIds = [];
-        context.dispatch('filterArticlesByTagIds', { tagIds } );
+        context.dispatch('filterArticlesByTagIds');
     },
     addArticle(context, { article }){
         axios.post('api/articles/', { article } ).then((res) => {
@@ -63,7 +66,6 @@ export default new Vuex.Store({
         .catch((err) => console.error(err));
     },
     deleteArticle(context, { article }){
-
         let articleId = article.id;
         axios.delete('api/articles/' + articleId ).then((res) => {
             context.commit('deleteArticle', { article })
@@ -114,18 +116,23 @@ export default new Vuex.Store({
             })
             .catch((err) => console.error(err));
     },
-    filterArticlesByTagIds(context, { tagIds }) {
-        axios.post('api/articles/get-filtered-articles/', { tagIds })
+    filterArticlesByTagIds(context, page ) {
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+
+        let tagIds = context.state.activeTagFilter;
+        axios.post('api/articles/get-filtered-articles?page='+page, { tagIds })
             .then((res) => {
-                let articles = res.data;
+                let articles = res.data.data;
                 context.commit('setArticles', articles );
+                context.commit('setPaginatedArticlesPage', res.data );
             })
             .catch((err) => console.error(err));
     },
     toggleTagIdInFilter(context, { tagId }) {
-        context.commit('toggleTagIdInFilter', {tagId} );
-        let tagIds = context.state.activeTagFilter;
-        context.dispatch('filterArticlesByTagIds', { tagIds } );
+        context.commit('toggleTagIdInFilter', { tagId } );
+        context.dispatch('filterArticlesByTagIds');
     }
   },
   getters : {
