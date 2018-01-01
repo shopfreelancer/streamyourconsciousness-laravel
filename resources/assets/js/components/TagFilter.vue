@@ -16,6 +16,9 @@ export default {
             this.$store.dispatch('filterArticlesByTagId', { tagId });
         },
     },
+    mounted(){
+        this.$store.dispatch('fetchTags');
+    },
     computed : {
         tags(){
             return this.$store.state.tags;

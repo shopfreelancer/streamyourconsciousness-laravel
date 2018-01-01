@@ -7,7 +7,6 @@
    
    
 <script>
-import { EventBus } from '../event-bus.js';
 import moment from 'moment'
 
 export default {

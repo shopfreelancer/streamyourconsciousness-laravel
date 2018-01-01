@@ -11,7 +11,6 @@
 </template> 
 
 <script>
-import { EventBus } from '../event-bus.js';
 import  ArticleItem  from './ArticleItem.vue';
 import moment from 'moment';
 

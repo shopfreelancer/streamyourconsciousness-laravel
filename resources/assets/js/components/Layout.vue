@@ -15,9 +15,6 @@
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-12 col-sm-3 button-reset-wrap text-center text-sm-left">
-                    <span @click="resetApp()" class="button-reset btn btn-outline-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Reset App</span>
-                </div>
                 <div class="col-12 col-sm-9">
                     <p class="text-muted text-center text-sm-right">
                       Built by <a href="https://www.shop-freelancer.de" target="_blank">Hans-Christian Psaar | Shop Freelancer</a>
@@ -33,28 +30,14 @@
 </template>
 
 <script>
-import { EventBus } from '../event-bus.js';
-
-//Vue.component('ArticleList', require('./components/ArticleList.vue'));
-
 import ArticleList from './ArticleList.vue'
 import ArticleCreate from './ArticleCreate.vue'
 import TagFilter from './TagFilter.vue'
-
 import store from '../store/index.js'
-
 
 export default {
     name: 'app',
     store,
-    methods : {
-        resetApp(){
-            EventBus.$emit('resetData');
-        },       
-    },
-    mounted(){
-        this.$store.dispatch('fetchTags');
-    },
     components : {
         ArticleList,
         ArticleCreate,
