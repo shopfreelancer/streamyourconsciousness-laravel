@@ -7,9 +7,7 @@
         <title>Streamy</title>
         <!-- CSRF Stuff -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/bootswatch-slate.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/animate.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/font-awesome.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
         <script>window.Laravel = { csrfToken: '{{ csrf_token() }}' }</script>
         <!-- Fonts -->
    </head>

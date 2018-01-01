@@ -1,6 +1,6 @@
 <template>
     <div class="article-tag row">
-        <div class="col-md-6">
+        <div class="col-6">
             <article-tag v-for="(tag,index) in tags" 
                           v-bind:showDeleteTagButtons="showDeleteTagButtons" 
                           v-bind:key="index"
@@ -9,7 +9,7 @@
             <span v-on:click="toggleTagInputField()" class="touchable-elem fa fa-plus-circle"></span>
             <span v-on:click="toggleDeleteTagButtons()" class="touchable-elem fa fa-minus-circle"></span>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
             <input class="form-control form-control-sm" v-bind:class="[tagInputFieldHasErrors ? 
 'is-invalid' : '']" v-show="showTagInputField" @keypress.enter="addTag()" v-model="newTag" type="text" placeholder="Add new tag">
             <div v-if="tagInputFieldHasErrors" class="invalid-feedback">{{tagInputFieldErrorMessage}}</div>

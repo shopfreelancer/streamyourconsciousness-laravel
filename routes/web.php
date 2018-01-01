@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('app');
 });
 
 Route::post('api/articles/new-tag', 'ArticleController@attachNewTag');

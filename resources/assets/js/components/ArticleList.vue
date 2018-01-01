@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <article-item
-              v-for="(article, index) in articles"
+              v-for="(article, index) in sortedList"
               v-bind:article="article"
               v-bind:articleId="article.id"
               v-bind:key="index"
@@ -26,7 +26,7 @@ export default {
         */
         sortArticlesByDateDesc(){
             this.articles.sort(function(a, b) {
-                return moment(a.created).isAfter(b.created, 'day') ? -1 : moment(a.created).isBefore(b.created, 'day') ? 1 : 0;
+                return moment(a.published).isAfter(b.published, 'day') ? -1 : moment(a.published).isBefore(b.published, 'day') ? 1 : 0;
             });
         },        
        /**
@@ -57,8 +57,8 @@ export default {
             for(let i = 0 ; i < articlesIndexes.length; i++){
                 let currentIndex = articlesIndexes[i];
              
-                let date1 = self.articles[searchForMatchingDateOfIndex].created,
-                    date2 = self.articles[currentIndex].created;
+                let date1 = self.articles[searchForMatchingDateOfIndex].published,
+                    date2 = self.articles[currentIndex].published;
                 
                 if(!moment(date1).isSame(date2, 'day')){
                     this.dateChangedArrayIndex.push(searchForMatchingDateOfIndex);

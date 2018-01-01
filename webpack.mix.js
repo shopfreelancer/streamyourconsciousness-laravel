@@ -15,3 +15,9 @@ mix.js('resources/assets/js/app.js', 'public/js');
 mix.webpackConfig({
     devtool: "inline-source-map"
 });
+
+mix.styles([
+    'public/css/vendor/FontAwesome/font-awesome.min.css',
+    'public/css/vendor/animate.css',
+    'public/css/vendor/bootswatch-slate.min.css',
+], 'public/css/app.css');
