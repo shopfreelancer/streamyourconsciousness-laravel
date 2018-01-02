@@ -28,9 +28,6 @@ export const articlesStore = {
     },
   },
   actions: { 
-    initArticles(context) {
-        context.dispatch('filterArticlesByTagIds');
-    },
     addArticle(context, { article }){
         axios.post('api/articles/', { article } ).then((res) => {
             if(parseInt(res.status) === 200){
@@ -50,13 +47,13 @@ export const articlesStore = {
         })
         .catch((err) => console.error(err));
     },
-    removeTagFromArticle(context, { articleId, tagId }) {
+    removeTagFromArticle(context, { article, tagId }) {
+        let articleId = article.id;
         axios.post('api/articles/delete-tag/', { articleId, tagId })
             .then((res) => {
-                let tags = res.data;
-                let article = context.getters.getArticleById(articleId);
+                let updatedTags = res.data;
 
-                context.commit('setTagsForArticle', { article, tags } );
+                context.commit('setTagsForArticle', { article, tags:updatedTags } );
                 context.dispatch('fetchTags');
             })
             .catch((err) => console.error(err));
@@ -72,12 +69,11 @@ export const articlesStore = {
             })
             .catch((err) => console.error(err));
     },
-    filterArticlesByTagIds(context, page ) {
+    getPaginatedArticlesByTagIds(context, { page, tagIds } ) {
         if (typeof page === 'undefined') {
             page = 1;
         }
-        // @todo: check dependency
-        let tagIds = this.state.tagsStore.activeTagFilter;
+        
         axios.post('api/articles/get-filtered-articles?page='+page, { tagIds })
             .then((res) => {
                 let articles = res.data.data;

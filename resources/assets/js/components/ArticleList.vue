@@ -13,18 +13,19 @@
 </template> 
 
 <script>
-import  ArticleItem  from './ArticleItem.vue';
+import ArticleItem  from './ArticleItem.vue';
 import moment from 'moment';
 Vue.component('pagination', require('laravel-vue-pagination'));
 
 export default {
     name: 'ArticleList',
     mounted(){
-        this.$store.dispatch('initArticles');
+        this.getResults(1);
     },
     methods: {
         getResults(page){
-            this.$store.dispatch('filterArticlesByTagIds', page);
+            let tagIds = this.$store.state.tagsStore.activeTagFilter;
+            this.$store.dispatch('getPaginatedArticlesByTagIds', { page, tagIds });
         },
         /**
         * Sort articles by date. This is used only for rendering.

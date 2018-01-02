@@ -52,8 +52,8 @@ export default {
           }
       },
       deleteTag(tagId){
-            let articleId = this.articleId;
-            this.$store.dispatch('removeTagFromArticle', { articleId , tagId });
+            let article = this.article;
+            this.$store.dispatch('removeTagFromArticle', { article , tagId });
       },
       resetTagInputField(){
             this.newTag = "";

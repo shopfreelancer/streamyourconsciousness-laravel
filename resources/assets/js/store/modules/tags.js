@@ -41,7 +41,9 @@ export const tagsStore = {
     },
     toggleTagIdInFilter(context, { tagId }) {
         context.commit('toggleTagIdInFilter', { tagId } );
-        context.dispatch('filterArticlesByTagIds');
+        let tagIds = context.state.activeTagFilter;
+        // when filtered Tags change, we need to reset results to first page
+        context.dispatch('getPaginatedArticlesByTagIds', { page:1, tagIds });
     }
   },
   getters : {}

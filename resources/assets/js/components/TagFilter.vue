@@ -11,11 +11,6 @@
 import TagFilterItem from './TagFilterItem.vue';
 export default {
     name: 'TagFilter',
-    methods : {
-        filterArticlesByTagId(tagId){
-            this.$store.dispatch('filterArticlesByTagId', { tagId });
-        },
-    },
     mounted(){
         this.$store.dispatch('fetchTags');
     },
@@ -31,6 +26,6 @@ export default {
 </script>
 <style>
     #tag-filter {
-        margin-bottom:20px;
+        margin-bottom: 20px;
     }
 </style>
