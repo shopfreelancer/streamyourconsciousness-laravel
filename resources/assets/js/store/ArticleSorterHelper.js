@@ -120,6 +120,3 @@ export default {
               return this.articles;
         }
 }
-
-
-

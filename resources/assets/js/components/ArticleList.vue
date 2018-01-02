@@ -32,13 +32,8 @@ export default {
               return this.$store.state.articlesStore.paginatedArticlesPage;
           },
       },
-      data () {
-        return {
-          dateChangedArrayIndex : []
-        }
-      },
       components: {
-          ArticleItem: ArticleItem,
+          ArticleItem: ArticleItem
       }
 }
 </script>
