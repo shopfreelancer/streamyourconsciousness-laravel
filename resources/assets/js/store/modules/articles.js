@@ -1,20 +1,17 @@
+import ArticleSorter from '../ArticleSorterHelper.js';
 export const articlesStore = {
   state : {
-    articles : [],
     paginatedArticlesPage : {}
   },
   mutations : {
-    setArticles(state,articles){
-        state.articles = articles
-    },
     setPaginatedArticlesPage(state,paginatedArticlesPage){
         state.paginatedArticlesPage = paginatedArticlesPage;
     },
     addArticle (state, {article}) {
-      state.articles.push(article);
+       state.paginatedArticlesPage.data.push(article);
     },
     deleteArticle (state, {article}) {
-       state.articles.splice(state.articles.indexOf(article), 1)
+        state.paginatedArticlesPage.data.splice( state.paginatedArticlesPage.data.indexOf(article), 1)
     },
     addTagToArticle (state, { article, tag }) {
       article.tags.push(tag);
@@ -76,8 +73,11 @@ export const articlesStore = {
         
         axios.post('api/articles/get-filtered-articles?page='+page, { tagIds })
             .then((res) => {
-                let articles = res.data.data;
-                context.commit('setArticles', articles );
+                
+                // sort Articles Array before commiting
+                ArticleSorter.setArticles(res.data.data);
+                res.data.data = ArticleSorter.sortArticles();
+                
                 context.commit('setPaginatedArticlesPage', res.data );
             })
             .catch((err) => console.error(err));
@@ -85,10 +85,10 @@ export const articlesStore = {
   },
   getters : {
     getArticlesCount : state => {
-        return state.articles.length;
+        return  state.paginatedArticlesPage.total;
     },
     getArticleById: (state) => (id) => {
-        return state.articles.find(article => article.id === id)
+        return state.paginatedArticlesPage.data.find(article => article.id === id)
     }
   }
 }
